@@ -132,7 +132,11 @@ int main(int argc, char *argv[]) {
         int server_index = get_next_server();
         if (server_index == -1) {
             const char* error_msg = "No servers available";
-            send(client_sock, error_msg, strlen(error_msg), 0);
+const char* http_response_format = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: %d\r\n\r\n%s";
+char http_response[BUFFER_SIZE];
+snprintf(http_response, sizeof(http_response), http_response_format, strlen(error_msg), error_msg);
+send(client_sock, http_response, strlen(http_response), 0);
+
             closesocket(client_sock);
             continue;
         }
